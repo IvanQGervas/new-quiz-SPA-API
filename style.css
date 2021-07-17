@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Karla:wght@200;400;700&display=swap');
+
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Karla';
+}
+
+.block{
+    width: 100wh;
+    height: 90vh;
+    background: #C2DFEF;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.banner{
+    background: #0B80C1;
+    width: 100%;
+    height: 10vh;
+    /* position: fixed; */
+    color: white;
+    padding: 10px;
+    padding-left: 20px;
+    font-weight: bold;
+    font-size: 2em;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.99);
+}
+
+form{
+    height: 90%;
+}
+
+
+/* BLOQUE PREGUNTA */
+.white-block{
+    width: 85%;
+    background: white;
+    box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.45);
+    border-radius: 5px;
+    padding: 20px 30px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tittle-question{
+    text-align: center;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.input-radio{
+    display: none;
+}
+
+.label-one{
+    width: 100%;
+    background: #EE5656;
+    border-radius: 5px;
+    padding: 20px 10px;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    margin: 10px;
+}
+
+.label-two{
+    width: 100%;
+    background: #EEDF56;
+    border-radius: 5px;
+    padding: 20px 10px;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    margin: 10px;
+}
+
+.label-three{
+    width: 100%;
+    background: #56EE9C;
+    border-radius: 5px;
+    padding: 20px 10px;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    margin: 10px;
+}
+
+.label-four{
+    width: 100%;
+    background: #56D3EE;
+    border-radius: 5px;
+    padding: 20px 10px;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    margin: 10px;
+}
+
+.button-next{
+    border: none;
+    width: 95px;
+    height: 40px;
+    background: #0B80C1;
+    border-radius: 5px;
+    color: white;
+    margin-top: 25px;
+    align-self: flex-end;
+}
+
+
