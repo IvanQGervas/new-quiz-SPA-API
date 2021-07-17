@@ -1,6 +1,7 @@
 
 let form = document.getElementById('form');
 
+// Función randomizar arrays
 function shuffle(a) {
     for (let i = a.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -9,16 +10,20 @@ function shuffle(a) {
     return a;
 }
 
+// Numero de preguntas que tendra el Quiz
 let numberOfQuestions = 10;
 
+
+// Petición de datos a la API
 fetch(`https://opentdb.com/api.php?amount=${numberOfQuestions}&type=multiple`)
     .then(data => data.json())
     .then(json => {
 
         let results = json.results;
-        let i = 0;
-        let contQuest = 1;
+        let i = 0; // Iterador para la función siguiente
+        let contQuest = 1; // Iterador name e id de los inputs
 
+        // Pantalla de inicio
         form.innerHTML = `
             <div class="block">
                 <div class="white-block">
@@ -27,27 +32,31 @@ fetch(`https://opentdb.com/api.php?amount=${numberOfQuestions}&type=multiple`)
                 </div>
             </div>
         `
-
+        // Selección boton pantalla de inicio
         let startButton = document.getElementById('startButton')
 
+        // Función boton pantalla de inicio
         startButton.addEventListener('click', () => {
-            siguiente(results[i])
+            siguiente(results[i]) // results[0] , pintamos la primera pergunta
         })
 
 
 
         let siguiente = (result) => {
-            console.log(result);
+            // console.log(result);
+            
+            // Recuperamos datos concretos
             let question = result.question;
             let questionAnswerCorrect = result.correct_answer;
             let questionsAnswerIncorrect = result.incorrect_answers;
 
-            let answers = [questionAnswerCorrect, ...questionsAnswerIncorrect];
+            let answers = [questionAnswerCorrect, ...questionsAnswerIncorrect]; // Agrupamos todos los datos que queremos en un Array
 
-            let questionsRandom = shuffle(answers);
+            let questionsRandom = shuffle(answers); // Randomizamos el array anterior para que la posición de la respuesta correcta no se repita
 
-            console.log(questionsRandom);
+            // console.log(questionsRandom);
 
+            // Sobreescribimos la pantalla anterior y pintamos la pregunta correspondiente segun el valor de i
             form.innerHTML = `
                     <div class="block">
                         <div class="white-block">
@@ -70,13 +79,16 @@ fetch(`https://opentdb.com/api.php?amount=${numberOfQuestions}&type=multiple`)
                     </div>
             `;
 
-
-            contQuest++;
+            // Aumentamos el valor de los iteradores a cada vuelta
+            contQuest++; 
             i++;
 
+            // Cogemos el nuevo boton
             let nextButton = document.getElementById('nextButton');
+            // Volvemos a llamar a la función dentro de si misma para pintar la nueva pregunta con el nuevo valor de i
             nextButton.addEventListener('click', () => {
 
+                // Cuando i llegue al valor de preguntas totales se detendra el bucle y mostraremos la pantalla final
                 if (i == (numberOfQuestions - 1)) {
                     // MOSTRAR FINAL
                     theEnd();
@@ -91,7 +103,7 @@ fetch(`https://opentdb.com/api.php?amount=${numberOfQuestions}&type=multiple`)
 
         let theEnd = () => {
 
-            
+
             form.innerHTML = `
             <div class="block">
                 <div class="white-block">
