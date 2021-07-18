@@ -69,7 +69,7 @@ fetch(`https://opentdb.com/api.php?amount=${numberOfQuestions}&type=multiple`)
                             <h2 class="tittle-question">${question}</h2>
 
                             <input class="input-radio" type="radio" name="quest${contQuest}" id="quest${contQuest}-resp1" value="${questionsRandom[0]}" />
-                            <label class="label-one" for="quest1-resp1" >${questionsRandom[0]}</label>
+                            <label class="label-one" for="quest${contQuest}-resp1" >${questionsRandom[0]}</label>
 
                             <input class="input-radio" type="radio" name="quest${contQuest}" id="quest${contQuest}-resp2" value="${questionsRandom[1]}" />
                             <label class="label-two" for="quest${contQuest}-resp2" >${questionsRandom[1]}</label>
@@ -119,6 +119,7 @@ fetch(`https://opentdb.com/api.php?amount=${numberOfQuestions}&type=multiple`)
 
 let theEnd = () => {
 
+    // Pinta pantalla final
     form.innerHTML = `
         <div class="block">
             <div class="white-block">
@@ -130,23 +131,26 @@ let theEnd = () => {
         </div>                        
     `;
 
+    // Recoge la fecha y la formatea en una variable
     let day = new Date().getDate();
     let mounth = new Date().getMonth();
     let year = new Date().getFullYear();
     let date = `${day}/${mounth}/${year}`
 
+    // Genera un objeto con la puntuación y fecha
     let result = {
         score: success,
         date: date
     };
 
+    // En caso de ser la primera partida genera un record vacio en el Storage para evitar errores
     if(localStorage.length == 0){localStorage.setItem('record', JSON.stringify([]))};
 
+    // Pedimos la puntuación guardade en storage
     let newRecord = JSON.parse(localStorage.getItem('record'));
-
+    // Le añadimos la nueva puntuación y fecha, que es un objeto
     newRecord.push(result);
-
+    // Guardamos el record con la ultima puntuación y fecha
     localStorage.setItem('record', JSON.stringify(newRecord));
-
 
 }
