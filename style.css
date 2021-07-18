@@ -11,6 +11,7 @@ h1{
     text-align: center;
 }
 
+/* Bloque principal con todo centrado */
 .block{
     width: 100wh;
     height: 90vh;
@@ -22,7 +23,7 @@ h1{
     flex-direction: column;
 }
 
-
+/* banner superior siempre presente */
 .banner{
     background: #0B80C1;
     width: 100%;
@@ -42,6 +43,7 @@ form{
     height: 90%;
 }
 
+/* Estilo de botones */
 .button-standar{
     border: none;
     width: 100px;
@@ -57,11 +59,10 @@ form{
     box-shadow: rgba(0, 0, 0, 0.30) 0px 0px 6px;
 }
 
-canvas{
-    height: 400;
-}
 
 /* BLOQUE PREGUNTA */
+
+/* Limite tamaño cajas inicio y final - Limitaciones para el resposive */
 .limit-width-white-block-star-end{
     max-width: 400px !important;
 }
@@ -69,10 +70,9 @@ canvas{
 .limit-height-width-grapichs-block{
     max-height: 395px;
     max-width: 770px;
-
-    /* min-height: 320px; */
 }
 
+/* Bloque de preguntas y estilo predeterminado para el contenido */
 .white-block{
     width: 85%;
     max-width: 768px;
@@ -98,6 +98,7 @@ canvas{
     display: none;
 }
 
+/* Estilos label preguntas */
 .label-one{
     width: 100%;
     background: #EE5656;
@@ -142,6 +143,11 @@ canvas{
     margin: 10px;
 }
 
+.label-one:hover, .label-two:hover, .label-three:hover, .label-four:hover{
+    box-shadow: rgba(0, 0, 0, 0.192) 0px 0px 10px;
+}
+
+/* Modificaciones para boton Siguiente en las preguntas */
 .button-next{
     border: none;
     width: 95px;
@@ -157,10 +163,7 @@ canvas{
     box-shadow: rgba(0, 0, 0, 0.30) 0px 0px 6px;
 }
 
-.label-one:hover, .label-two:hover, .label-three:hover, .label-four:hover{
-    box-shadow: rgba(0, 0, 0, 0.192) 0px 0px 10px;
-}
-
+/* Estilo respuesta seleccionada */
 input[type="radio"]:checked + label {
 	background-image: linear-gradient(310deg, #f8ab37, #6ab3e4);
     box-shadow: rgba(0, 0, 0, 0.45) 0px 0px 5px, rgba(0, 0, 0, 0.2) 0px 0px 4px inset;
@@ -170,7 +173,7 @@ input[type="radio"]:checked + label {
 
 
 
-/* FINAL */
+/* Estilos FINAL */
 
 .title-end{
     text-align: center;

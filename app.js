@@ -21,7 +21,9 @@ form.addEventListener('submit', event => {
 })
 
 
+// Englobo toda la funcionalidad de la aplicación en una función para poder reinicarla con un boton de volver a jugar
 let startAndReload = () => {
+
 // Petición de datos a la API
 fetch(`https://opentdb.com/api.php?amount=${numberOfQuestions}&type=multiple`)
     .then(data => data.json())
@@ -137,6 +139,7 @@ fetch(`https://opentdb.com/api.php?amount=${numberOfQuestions}&type=multiple`)
 
 };
 
+// Iniciamos la funcion una vez escrito todo
 startAndReload();
 
 // Función pantalla final
