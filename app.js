@@ -11,7 +11,7 @@ function shuffle(a) {
 }
 
 // Numero de preguntas que tendra el Quiz
-let numberOfQuestions = 2;
+let numberOfQuestions = 10;
 
 // Marcador de aciertos
 let success = 0;
@@ -19,6 +19,7 @@ let success = 0;
 form.addEventListener('submit', event => {
     event.preventDefault();
 })
+
 
 // Petición de datos a la API
 fetch(`https://opentdb.com/api.php?amount=${numberOfQuestions}&type=multiple`)
@@ -38,6 +39,25 @@ fetch(`https://opentdb.com/api.php?amount=${numberOfQuestions}&type=multiple`)
                 </div>
             </div>
         `
+
+        // Función encargada de pintar el grafico en el Canvas
+        // El if se encarga de que en caso de que sea la primera vez que se juegue, o no haya registro de anteriores partidas se mostrara la pantalla de inicio sin grafico
+        if(localStorage.length != 0){
+            form.innerHTML = `
+                <div class="block">
+                    <div class="white-block">
+                        <h1>Bienvenido</h1>
+                        <button id="startButton" class="button-standar" type="button">Empezar!</button>
+                    </div>
+                    <div class="white-block">
+                        <canvas id="myChart" height="400"></canvas>
+                    </div>
+                </div>`;
+            
+            // Pintamos el grafico en el canvas
+            drawGraphic();
+        };
+
         // Selección boton pantalla de inicio
         let startButton = document.getElementById('startButton')
 
@@ -59,8 +79,6 @@ fetch(`https://opentdb.com/api.php?amount=${numberOfQuestions}&type=multiple`)
             let answers = [questionAnswerCorrect, ...questionsAnswerIncorrect]; // Agrupamos todos los datos que queremos en un Array
 
             let questionsRandom = shuffle(answers); // Randomizamos el array anterior para que la posición de la respuesta correcta no se repita
-
-            // console.log(questionsRandom);
 
             // Sobreescribimos la pantalla anterior y pintamos la pregunta correspondiente segun el valor de i
             form.innerHTML = `
@@ -116,7 +134,7 @@ fetch(`https://opentdb.com/api.php?amount=${numberOfQuestions}&type=multiple`)
 
     })
 
-
+// Función pantalla final
 let theEnd = () => {
 
     // Pinta pantalla final
@@ -153,4 +171,50 @@ let theEnd = () => {
     // Guardamos el record con la ultima puntuación y fecha
     localStorage.setItem('record', JSON.stringify(newRecord));
 
+}
+
+
+
+// Función encargada del grafico, utilizando la librearia Chart
+let drawGraphic = () =>{
+
+    // Cogemos los datos del localStorage
+    let oldScore = JSON.parse(localStorage.getItem('record'));
+    // Seleccionamos el canvas y le damos propiedad 2D
+    let ctx = document.getElementById('myChart').getContext('2d');
+
+    // Creamos la estructura del objeto que requiere la libreria para poder añadir los datos antes de pintar nada
+    let structureObject = {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Aciertos',
+                data: [],
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    };
+
+    // Añadimos los datos del grafico
+    oldScore.map( element => {
+        structureObject.data.labels.push(element.date);
+        structureObject.data.datasets[0].data.push(element.score);
+    } )
+    
+    // Pintamos el grafico
+    let myChart = new Chart(ctx, structureObject);
 }
