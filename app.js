@@ -21,6 +21,7 @@ form.addEventListener('submit', event => {
 })
 
 
+let startAndReload = () => {
 // Petición de datos a la API
 fetch(`https://opentdb.com/api.php?amount=${numberOfQuestions}&type=multiple`)
     .then(data => data.json())
@@ -33,8 +34,8 @@ fetch(`https://opentdb.com/api.php?amount=${numberOfQuestions}&type=multiple`)
         // Pantalla de inicio
         form.innerHTML = `
             <div class="block">
-                <div class="white-block">
-                    <h1>Bienvenido</h1>
+                <div class="white-block limit-width-white-block-star-end">
+                    <h1>Bienvenido al Quiz!</h1>
                     <button id="startButton" class="button-standar" type="button">Empezar!</button>
                 </div>
             </div>
@@ -42,18 +43,18 @@ fetch(`https://opentdb.com/api.php?amount=${numberOfQuestions}&type=multiple`)
 
         // Función encargada de pintar el grafico en el Canvas
         // El if se encarga de que en caso de que sea la primera vez que se juegue, o no haya registro de anteriores partidas se mostrara la pantalla de inicio sin grafico
-        if(localStorage.length != 0){
+        if (localStorage.length != 0) {
             form.innerHTML = `
                 <div class="block">
-                    <div class="white-block">
-                        <h1>Bienvenido</h1>
+                    <div class="white-block limit-width-white-block-star-end">
+                        <h1>Superate a ti mismo!</h1>
                         <button id="startButton" class="button-standar" type="button">Empezar!</button>
                     </div>
-                    <div class="white-block">
-                        <canvas id="myChart" height="400"></canvas>
+                    <div class="white-block limit-height-width-grapichs-block">
+                        <canvas class="canvas-grapich" id="myChart"></canvas>
                     </div>
                 </div>`;
-            
+
             // Pintamos el grafico en el canvas
             drawGraphic();
         };
@@ -67,7 +68,7 @@ fetch(`https://opentdb.com/api.php?amount=${numberOfQuestions}&type=multiple`)
         })
 
 
-
+        // Función encargada de iterar, pintar y comprobar las preguntas
         let siguiente = (result) => {
             // console.log(result);
 
@@ -134,20 +135,30 @@ fetch(`https://opentdb.com/api.php?amount=${numberOfQuestions}&type=multiple`)
 
     })
 
+};
+
+startAndReload();
+
 // Función pantalla final
 let theEnd = () => {
 
     // Pinta pantalla final
     form.innerHTML = `
         <div class="block">
-            <div class="white-block">
+            <div class="white-block limit-width-white-block-star-end">
                 <h2 class="title-end">Aquí van tus resultados!</h2>
                 <span class="marker">${success} / ${numberOfQuestions}</span>
                 <p class="message-end">¡Muchas gracias por jugar!</p>
-                <button class="button-standar">Jugar otra vez</button>
+                <button id="reloadButton" class="button-standar">Jugar otra vez</button>
             </div>
         </div>                        
     `;
+
+    let reloadButton = document.getElementById('reloadButton');
+
+    reloadButton.addEventListener('click', () => {
+        startAndReload();
+    })
 
     // Recoge la fecha y la formatea en una variable
     let day = new Date().getDate();
@@ -162,7 +173,7 @@ let theEnd = () => {
     };
 
     // En caso de ser la primera partida genera un record vacio en el Storage para evitar errores
-    if(localStorage.length == 0){localStorage.setItem('record', JSON.stringify([]))};
+    if (localStorage.length == 0) { localStorage.setItem('record', JSON.stringify([])) };
 
     // Pedimos la puntuación guardade en storage
     let newRecord = JSON.parse(localStorage.getItem('record'));
@@ -176,7 +187,7 @@ let theEnd = () => {
 
 
 // Función encargada del grafico, utilizando la librearia Chart
-let drawGraphic = () =>{
+let drawGraphic = () => {
 
     // Cogemos los datos del localStorage
     let oldScore = JSON.parse(localStorage.getItem('record'));
@@ -203,18 +214,18 @@ let drawGraphic = () =>{
         options: {
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: false
                 }
             }
         }
     };
 
     // Añadimos los datos del grafico
-    oldScore.map( element => {
+    oldScore.map(element => {
         structureObject.data.labels.push(element.date);
         structureObject.data.datasets[0].data.push(element.score);
-    } )
-    
+    })
+
     // Pintamos el grafico
     let myChart = new Chart(ctx, structureObject);
 }
