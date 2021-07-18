@@ -11,8 +11,14 @@ function shuffle(a) {
 }
 
 // Numero de preguntas que tendra el Quiz
-let numberOfQuestions = 10;
+let numberOfQuestions = 2;
 
+// Marcador de aciertos
+let success = 0;
+
+form.addEventListener('submit', event => {
+    event.preventDefault();
+})
 
 // Petición de datos a la API
 fetch(`https://opentdb.com/api.php?amount=${numberOfQuestions}&type=multiple`)
@@ -28,7 +34,7 @@ fetch(`https://opentdb.com/api.php?amount=${numberOfQuestions}&type=multiple`)
             <div class="block">
                 <div class="white-block">
                     <h1>Bienvenido</h1>
-                    <button id="startButton" class="button-next" type="button">Empezar!</button>
+                    <button id="startButton" class="button-standar" type="button">Empezar!</button>
                 </div>
             </div>
         `
@@ -44,7 +50,7 @@ fetch(`https://opentdb.com/api.php?amount=${numberOfQuestions}&type=multiple`)
 
         let siguiente = (result) => {
             // console.log(result);
-            
+
             // Recuperamos datos concretos
             let question = result.question;
             let questionAnswerCorrect = result.correct_answer;
@@ -59,28 +65,30 @@ fetch(`https://opentdb.com/api.php?amount=${numberOfQuestions}&type=multiple`)
             // Sobreescribimos la pantalla anterior y pintamos la pregunta correspondiente segun el valor de i
             form.innerHTML = `
                     <div class="block">
-                        <div class="white-block">
+                        <div id="answer-block" class="white-block">
                             <h2 class="tittle-question">${question}</h2>
 
-                                <input class="input-radio" type="radio" name="quest${contQuest}" id="quest${contQuest}-resp1" value="${questionsRandom[0]}" />
-                                <label class="label-one" for="quest1-resp1" >${questionsRandom[0]}</label>
+                            <input class="input-radio" type="radio" name="quest${contQuest}" id="quest${contQuest}-resp1" value="${questionsRandom[0]}" />
+                            <label class="label-one" for="quest1-resp1" >${questionsRandom[0]}</label>
 
-                                <input class="input-radio" type="radio" name="quest${contQuest}" id="quest${contQuest}-resp2" value="${questionsRandom[1]}" />
-                                <label class="label-two" for="quest1-resp2" >${questionsRandom[1]}</label>
+                            <input class="input-radio" type="radio" name="quest${contQuest}" id="quest${contQuest}-resp2" value="${questionsRandom[1]}" />
+                            <label class="label-two" for="quest${contQuest}-resp2" >${questionsRandom[1]}</label>
 
-                                <input class="input-radio" type="radio" name="quest${contQuest}" id="quest${contQuest}-resp3" value="${questionsRandom[2]}" />
-                                <label class="label-three" for="quest1-resp3" >${questionsRandom[2]}</label>
+                            <input class="input-radio" type="radio" name="quest${contQuest}" id="quest${contQuest}-resp3" value="${questionsRandom[2]}" />
+                            <label class="label-three" for="quest${contQuest}-resp3" >${questionsRandom[2]}</label>
 
-                                <input class="input-radio" type="radio" name="quest${contQuest}" id="quest${contQuest}-resp4" value="${questionsRandom[3]}" />
-                                <label class="label-four" for="quest1-resp4" >${questionsRandom[3]}</label>
+                            <input class="input-radio" type="radio" name="quest${contQuest}" id="quest${contQuest}-resp4" value="${questionsRandom[3]}" />
+                            <label class="label-four" for="quest${contQuest}-resp4" >${questionsRandom[3]}</label>
 
-                                <button id="nextButton" class="button-next" type="button">Siguiente</button>
-                            </div>
+                            <button id="nextButton" class="button-next" type="button">Siguiente</button>
+                        </div>
                     </div>
             `;
 
+
+
             // Aumentamos el valor de los iteradores a cada vuelta
-            contQuest++; 
+            contQuest++;
             i++;
 
             // Cogemos el nuevo boton
@@ -89,11 +97,15 @@ fetch(`https://opentdb.com/api.php?amount=${numberOfQuestions}&type=multiple`)
             nextButton.addEventListener('click', () => {
 
                 // Cuando i llegue al valor de preguntas totales se detendra el bucle y mostraremos la pantalla final
-                if (i == (numberOfQuestions - 1)) {
+                if (i == (numberOfQuestions)) {
                     // MOSTRAR FINAL
                     theEnd();
                 } else {
-                    siguiente(results[i])
+                    // Recuepramos el valor seleccionado por el usuario
+                    let answerBlock = document.querySelector(`input[name="quest${contQuest - 1}"]:checked`).value;
+                    // Si el valor es la respuesta correcta aumenta el marcador de aciertos
+                    if (answerBlock == questionAnswerCorrect) { success++ };
+                    siguiente(results[i]);
                 }
 
             })
@@ -101,85 +113,40 @@ fetch(`https://opentdb.com/api.php?amount=${numberOfQuestions}&type=multiple`)
         };
 
 
-        let theEnd = () => {
-
-
-            form.innerHTML = `
-            <div class="block">
-                <div class="white-block">
-                    <h1>Terminaste!</h1>
-                </div>
-            </div>                        
-            `;
-
-
-        }
 
     })
 
 
+let theEnd = () => {
+
+    form.innerHTML = `
+        <div class="block">
+            <div class="white-block">
+                <h2 class="title-end">Aquí van tus resultados!</h2>
+                <span class="marker">${success} / ${numberOfQuestions}</span>
+                <p class="message-end">¡Muchas gracias por jugar!</p>
+                <button class="button-standar">Jugar otra vez</button>
+            </div>
+        </div>                        
+    `;
+
+    let day = new Date().getDate();
+    let mounth = new Date().getMonth();
+    let year = new Date().getFullYear();
+    let date = `${day}/${mounth}/${year}`
+
+    let result = {
+        score: success,
+        date: date
+    };
+
+    if(localStorage.length == 0){localStorage.setItem('record', JSON.stringify([]))};
+
+    let newRecord = JSON.parse(localStorage.getItem('record'));
+
+    newRecord.push(result);
+
+    localStorage.setItem('record', JSON.stringify(newRecord));
 
 
-
-
-
-
-
-
-
-// fetch('https://opentdb.com/api.php?amount=10&type=multiple')
-//     .then(data => data.json())
-//     .then(json => {
-
-//         let results = json.results;
-//         let contQuest = 1;
-
-//         results.map(element => {
-//             // console.log(element);
-
-//             // Datos recogidos
-//             let question = element.question;
-//             let questionCorrect = element.correct_answer;
-//             let questionIncorrect1 = element.incorrect_answers[0];
-//             let questionIncorrect2 = element.incorrect_answers[1];
-//             let questionIncorrect3 = element.incorrect_answers[2];
-
-//             // Generamos un array con todas las preguntas
-//             let questions = [questionCorrect, questionIncorrect1, questionIncorrect2, questionIncorrect3];
-
-//             // Randomizamos las posiciones de los valores del Array no tener siempre el mismo nombre en pantalla
-//             let questionsRandom = shuffle(questions);
-
-//             console.log(questionsRandom);
-//             console.log(questionCorrect);
-
-//             form.innerHTML += `
-//                 <div class="block">
-//                     <div class="white-block">
-//                         <h2 class="tittle-question">${question}</h2>
-
-//                             <input class="input-radio" type="radio" name="quest${contQuest}" id="quest${contQuest}-resp1" value="${questionsRandom[0]}" />
-//                             <label class="label-one" for="quest1-resp1" >${questionsRandom[0]}</label>
-
-//                             <input class="input-radio" type="radio" name="quest${contQuest}" id="quest${contQuest}-resp2" value="${questionsRandom[1]}" />
-//                             <label class="label-two" for="quest1-resp2" >${questionsRandom[1]}</label>
-
-//                             <input class="input-radio" type="radio" name="quest${contQuest}" id="quest${contQuest}-resp3" value="${questionsRandom[2]}" />
-//                             <label class="label-three" for="quest1-resp3" >${questionsRandom[2]}</label>
-
-//                             <input class="input-radio" type="radio" name="quest${contQuest}" id="quest${contQuest}-resp4" value="${questionsRandom[3]}" />
-//                             <label class="label-four" for="quest1-resp4" >${questionsRandom[3]}</label>
-
-//                             <button class="button-next" type="button">Siguiente</button>
-//                         </div>
-//                 </div>
-//             `;
-
-//             contQuest++;
-
-
-
-
-//         })
-
-//     })
+}
